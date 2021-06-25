@@ -1,11 +1,11 @@
 FROM registry.access.redhat.com/ubi8/ubi-init
-USER root
 LABEL maintainer="Geordan Liban"
 WORKDIR /tmp
 
 ENV \
     USER="dev" \
     HOME="/home/dev" \
+    DOTFILES_DIR="/Users/geordan/code/geordan/dotfiles" \
     AWSCLI_VERSION=1.18.32 \
     GID=1000 \
     UID=1000 \
@@ -13,10 +13,14 @@ ENV \
     YUM_OPTS="--setopt=install_weak_deps=False --setopt=tsflags=nodocs"
 #
 # update image
-run yum update --disablerepo=* --enablerepo=ubi-8-appstream --enablerepo=ubi-8-baseos -y && rm -rf /var/cache/yum
+RUN yum update --disablerepo=* --enablerepo=ubi-8-appstream --enablerepo=ubi-8-baseos -y && rm -rf /var/cache/yum
 #
 # yum installs
-RUN yum install --disablerepo=* --enablerepo=ubi-8-appstream --enablerepo=ubi-8-baseos -y \
+RUN yum install -y \
+--disableplugin=subscription-manager \
+# --disablerepo=* \
+# --enablerepo=ubi-8-appstream \
+# --enablerepo=ubi-8-baseos -y \
 curl \
 gcc \
 git \
@@ -31,6 +35,9 @@ unzip \
 vim \
 wget \
 && rm -rf /var/cache/yum && yum -y clean all
+#
+# RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm && yum repolist
+# RUN yum install -y tmux
 #
 # pip installs
 RUN pip3 install ${PIP_OPTS} awscli==${AWSCLI_VERSION}
@@ -48,8 +55,16 @@ RUN useradd -u ${UID} -m -g 0 ${USER} && \
     usermod -aG wheel ${USER} && \
     echo -e "${USER}\tALL=(ALL)\tNOPASSWD: ALL" > /etc/sudoers.d/020_sudo_${USER}
 
-USER ${USER}
-WORKDIR ${HOME}
+RUN mkdir /dotfiles
+
+WORKDIR $HOME
+
+COPY setup.sh .
+RUN chown $USER setup.sh
+
+# RUN for f in $(ls -A /dotfiles | grep -v README | grep -vE '^.git/*$' ); do ln -s /dotfiles/$f $f; done
+# RUN for f in $(ls -A $DOTFILES_DIR | grep -v README | grep -vE '^.git/*$' ); do ln -s $DOTFILES_DIR/$f $f; done
+
 
 ##
 ## Set application execution parameters
