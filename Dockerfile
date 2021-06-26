@@ -12,15 +12,15 @@ ENV \
     PIP_OPTS="--force-reinstall --no-cache-dir" \
     YUM_OPTS="--setopt=install_weak_deps=False --setopt=tsflags=nodocs"
 #
+# add extra rpm repo
+COPY extras.repo /etc/yum.repos.d/
+#
 # update image
 RUN yum update --disablerepo=* --enablerepo=ubi-8-appstream --enablerepo=ubi-8-baseos -y && rm -rf /var/cache/yum
 #
 # yum installs
 RUN yum install -y \
 --disableplugin=subscription-manager \
-# --disablerepo=* \
-# --enablerepo=ubi-8-appstream \
-# --enablerepo=ubi-8-baseos -y \
 curl \
 gcc \
 git \
@@ -29,15 +29,14 @@ make \
 man-db \
 python3 \
 python3-pip \
+ripgrep \
 sudo \
+tmux \
 tzdata \
 unzip \
 vim \
 wget \
 && rm -rf /var/cache/yum && yum -y clean all
-#
-# RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm && yum repolist
-# RUN yum install -y tmux
 #
 # pip installs
 RUN pip3 install ${PIP_OPTS} awscli==${AWSCLI_VERSION}
