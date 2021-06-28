@@ -3,8 +3,7 @@ LABEL maintainer="Geordan Liban"
 WORKDIR /tmp
 
 ENV \
-    USER="dev" \
-    HOME="/home/dev" \
+    HOME="/root" \
     DOTFILES_DIR="/Users/geordan/code/geordan/dotfiles" \
     AWSCLI_VERSION=1.18.32 \
     GID=1000 \
@@ -12,15 +11,11 @@ ENV \
     PIP_OPTS="--force-reinstall --no-cache-dir" \
     YUM_OPTS="--setopt=install_weak_deps=False --setopt=tsflags=nodocs"
 #
-# add extra rpm repo
-COPY extras.repo /etc/yum.repos.d/
-#
-# update image
-RUN yum update --disablerepo=* --enablerepo=ubi-8-appstream --enablerepo=ubi-8-baseos -y && rm -rf /var/cache/yum
-#
-# yum installs
+RUN yum upgrade -y
+RUN yum install -y dnf-plugins-core
+RUN yum config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+RUN yum config-manager --add-repo https://copr.fedorainfracloud.org/coprs/carlwgeorge/ripgrep/repo/epel-7/carlwgeorge-ripgrep-epel-7.repo
 RUN yum install -y \
---disableplugin=subscription-manager \
 curl \
 gcc \
 git \
@@ -31,12 +26,12 @@ python3 \
 python3-pip \
 ripgrep \
 sudo \
-tmux \
+terraform-ls \
 tzdata \
 unzip \
 vim \
-wget \
-&& rm -rf /var/cache/yum && yum -y clean all
+wget
+# && rm -rf /var/cache/yum && yum -y clean all
 #
 # pip installs
 RUN pip3 install ${PIP_OPTS} awscli==${AWSCLI_VERSION}
@@ -47,16 +42,14 @@ RUN wget https://github.com/neovim/neovim/releases/download/nightly/nvim.appimag
     ./nvim.appimage --appimage-extract && \
     sudo ln -s /tmp/squashfs-root/usr/bin/nvim /usr/bin/nvim
 #
-# user creation
-RUN useradd -u ${UID} -m -g 0 ${USER} && \
-    chgrp -R 0 ${HOME} && \
-    chmod -R g+rwX ${HOME} && \
-    usermod -aG wheel ${USER} && \
-    echo -e "${USER}\tALL=(ALL)\tNOPASSWD: ALL" > /etc/sudoers.d/020_sudo_${USER}
-
+# tmux install
+COPY install-tmux .
+RUN bash install-tmux
+#
+#
 RUN mkdir /dotfiles
-
+#
+# user setup
 WORKDIR $HOME
-
+RUN usermod -s /bin/zsh root
 COPY setup.sh .
-RUN chown $USER setup.sh
