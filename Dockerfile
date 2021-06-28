@@ -37,7 +37,7 @@ wget
 RUN pip3 install ${PIP_OPTS} awscli==${AWSCLI_VERSION}
 #
 # neovim nightly install
-RUN wget https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage && \
+RUN curl -L -O https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage && \
     chmod +x nvim.appimage && \
     ./nvim.appimage --appimage-extract && \
     sudo ln -s /tmp/squashfs-root/usr/bin/nvim /usr/bin/nvim
