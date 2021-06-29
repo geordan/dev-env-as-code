@@ -20,6 +20,7 @@ curl \
 gcc \
 git \
 golang \
+java-1.8.0-openjdk \
 make \
 man-db \
 python3 \
@@ -34,6 +35,7 @@ wget
 #
 # pip installs
 RUN pip3 install ${PIP_OPTS} awscli==${AWSCLI_VERSION}
+RUN pip3 install ${PIP_OPTS} git-remote-codecommit
 #
 # neovim nightly install
 RUN curl -L -O https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage && \
@@ -49,11 +51,13 @@ RUN bash install-tmux
 #
 RUN mkdir /dotfiles
 #
+WORKDIR /root
+#
 # tfenv install
-RUN git clone https://github.com/tfutils/tfenv.git /root/.tfenv
-RUN ln -s /root/.tfenv/bin/* /usr/local/bin
+RUN git clone https://github.com/tfutils/tfenv.git .tfenv
+RUN ln -s .tfenv/bin/* /usr/local/bin
+RUN .tfenv/bin/tfenv install 0.12.31
+RUN .tfenv/bin/tfenv use 0.12.31
 # RUN echo 'export PATH="$HOME/.tfenv/bin:$PATH"' >> ~/.bash_profile
 #
-# user setup
-# RUN usermod -s /bin/zsh root
 COPY setup.sh .

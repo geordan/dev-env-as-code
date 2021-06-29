@@ -6,7 +6,7 @@ TMUX_VERSION=3.1
 # install deps
 # commenting out since default ubi8 can't find kernel-devel and it's not needed it seems
 # yum install gcc kernel-devel make ncurses-devel
-yum install ncurses-devel
+yum install -y ncurses-devel
 
 # download sources for libevent and make and install
 curl -OL "https://github.com/libevent/libevent/releases/download/release-$LIBEVENT_VERSION-stable/libevent-$LIBEVENT_VERSION-stable.tar.gz"
@@ -14,7 +14,7 @@ tar -xvzf "libevent-$LIBEVENT_VERSION-stable.tar.gz"
 cd "libevent-$LIBEVENT_VERSION-stable"
 ./configure --prefix=/usr/local
 make
-sudo make install
+make install
 cd ..
 
 # download source for tmux and make and install
@@ -23,5 +23,5 @@ tar -xvzf "tmux-$TMUX_VERSION.tar.gz"
 cd "tmux-$TMUX_VERSION"
 LDFLAGS="-L/usr/local/lib -Wl,-rpath=/usr/local/lib" ./configure --prefix=/usr/local
 make
-sudo make install
+make install
 cd ..
