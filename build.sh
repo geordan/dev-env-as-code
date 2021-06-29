@@ -2,4 +2,4 @@
 
 set -eux
 
-docker build  --build-arg USER="${USER}" -t geodev:0.0.2 .
+docker build -t geodev:0.0.2 .
