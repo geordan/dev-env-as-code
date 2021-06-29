@@ -12,7 +12,7 @@ ENV \
     YUM_OPTS="--setopt=install_weak_deps=False --setopt=tsflags=nodocs"
 #
 RUN yum upgrade -y
-RUN yum install -y dnf-plugins-core
+# RUN yum install -y dnf-plugins-core
 RUN yum config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
 RUN yum config-manager --add-repo https://copr.fedorainfracloud.org/coprs/carlwgeorge/ripgrep/repo/epel-7/carlwgeorge-ripgrep-epel-7.repo
 RUN yum install -y \
@@ -25,7 +25,6 @@ man-db \
 python3 \
 python3-pip \
 ripgrep \
-sudo \
 terraform-ls \
 tzdata \
 unzip \
@@ -40,16 +39,21 @@ RUN pip3 install ${PIP_OPTS} awscli==${AWSCLI_VERSION}
 RUN curl -L -O https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage && \
     chmod +x nvim.appimage && \
     ./nvim.appimage --appimage-extract && \
-    sudo ln -s /tmp/squashfs-root/usr/bin/nvim /usr/bin/nvim
+    ln -s /tmp/squashfs-root/usr/bin/nvim /usr/local/bin/nvim && \
+    nvim +PlugInstall +qall
+#
 #
 # tmux install
 COPY install-tmux .
 RUN bash install-tmux
 #
-#
 RUN mkdir /dotfiles
 #
+# tfenv install
+RUN git clone https://github.com/tfutils/tfenv.git /root/.tfenv
+RUN ln -s /root/.tfenv/bin/* /usr/local/bin
+# RUN echo 'export PATH="$HOME/.tfenv/bin:$PATH"' >> ~/.bash_profile
+#
 # user setup
-WORKDIR $HOME
-RUN usermod -s /bin/zsh root
+# RUN usermod -s /bin/zsh root
 COPY setup.sh .
