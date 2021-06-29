@@ -11,7 +11,7 @@ ENV \
     PIP_OPTS="--force-reinstall --no-cache-dir" \
     YUM_OPTS="--setopt=install_weak_deps=False --setopt=tsflags=nodocs"
 #
-RUN yum upgrade -y
+RUN yum update -y
 # RUN yum install -y dnf-plugins-core
 RUN yum config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
 RUN yum config-manager --add-repo https://copr.fedorainfracloud.org/coprs/carlwgeorge/ripgrep/repo/epel-7/carlwgeorge-ripgrep-epel-7.repo
