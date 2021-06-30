@@ -21,6 +21,7 @@ gcc \
 git \
 golang \
 java-1.8.0-openjdk \
+jq \
 make \
 man-db \
 python3 \
