@@ -2,4 +2,6 @@
 
 set -eux
 
-docker build -t geodev:0.0.2 .
+. env.sh
+
+docker build -t "${IMAGE_NAME}":"${IMAGE_TAG}" .

@@ -1,0 +1,2 @@
+IMAGE_NAME='geodev'
+IMAGE_TAG='0.0.1'

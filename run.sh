@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
-set -eu
+set -eux
 
-echo ""
-echo "Run './setup.sh && source .bashrc'"
-echo ""
+. env.sh
+
+# echo ""
+# echo "Run './setup.sh && source .bashrc'"
+# echo ""
 
 docker run \
   -v '/Users/geordan/code/geordan/dotfiles:/dotfiles' \
   -v '/Users/geordan/code:/home/dev/code' \
-  -it geodev:0.0.2 bash
+  -it "${IMAGE_NAME}":"${IMAGE_TAG}" bash
