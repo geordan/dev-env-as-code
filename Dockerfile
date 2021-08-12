@@ -38,7 +38,6 @@ WORKDIR /root
 RUN chsh -s /usr/bin/zsh
 
 
-RUN ln -s /dotfiles/.config/nvim/init.lua .config/nvim/init.lua
 RUN ln -s /dotfiles/.gitconfig .gitconfig
 RUN ln -s /dotfiles/.tmux.conf .tmux.conf
 RUN ln -s /dotfiles/.vimrc .vimrc
@@ -49,9 +48,10 @@ RUN ln -s /dotfiles/.zshrc .zshrc
 #RUN git clone --depth=1 https://github.com/savq/paq-nvim.git "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/pack/paqs/start/paq-nvim
 # RUN mkdir -p .config/nvim
 # RUN mkdir -p .config/nvim/undodir
+# RUN ln -s /dotfiles/.config/nvim/init.lua .config/nvim/init.lua
 
 ## vim
-vim +q
+RUN vim +q
 
 ## zsh
 RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
