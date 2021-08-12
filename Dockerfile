@@ -4,7 +4,10 @@ FROM ubuntu:impish-20210722
 ENV \
 AWSCLI_VERSION=1.18.32 \
 DEBIAN_FRONTEND=noninteractive \
-PIP_OPTS="--force-reinstall --no-cache-dir"
+PIP_OPTS="--force-reinstall --no-cache-dir" \ 
+HTTP_PROXY=${HTTP_PROXY} \
+HTTPS_PROXY=${HTTPS_PROXY} \
+NO_PROXY=${NO_PROXY} 
 
 WORKDIR /tmp
 
@@ -22,13 +25,10 @@ RUN apt-get install -y \
 	vim \
 	zsh
 
-RUN bash install-neovim.sh
-
 # pip installs
 RUN pip3 install ${PIP_OPTS} \
 	awscli==${AWSCLI_VERSION} \ 
-	git-remote-codecommit \
-	pynvim
+	git-remote-codecommit 
 
 RUN mkdir /dotfiles
 
