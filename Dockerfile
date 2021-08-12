@@ -1,25 +1,26 @@
-FROM amazonlinux:2.0.20210701.0
+FROM ubuntu:impish-20210722
 
 
 ENV \
 AWSCLI_VERSION=1.18.32 \
+DEBIAN_FRONTEND=noninteractive \
 PIP_OPTS="--force-reinstall --no-cache-dir"
 
 WORKDIR /tmp
 
-RUN yum update -y
+RUN apt-get update -y
+RUN apt-get upgrade -y
 
-RUN yum install -y \
+RUN apt-get install -y \
+	curl \
 	git \
-	man \
 	man-db \ 
-	man-pages \
-	pip3 \
+	manpages \
+	python3-pip \
 	python3 \
-	tar \
 	tmux \ 
-	vim
-
+	vim \
+	zsh
 COPY files/ .
 
 RUN bash install-neovim.sh
@@ -31,16 +32,26 @@ RUN pip3 install ${PIP_OPTS} \
 	pynvim
 
 RUN mkdir /dotfiles
+
 WORKDIR /root
 
-RUN mkdir -p .config/nvim
-RUN mkdir -p .config/nvim/undodir
+RUN chsh -s /usr/bin/zsh
 
-RUN ln -s /dotfiles/.bash_aliases .bash_aliases
-RUN ln -s /dotfiles/.bash_profile .bash_profile
-RUN ln -s /dotfiles/.bashrc .bashrc
+
 RUN ln -s /dotfiles/.config/nvim/init.lua .config/nvim/init.lua
 RUN ln -s /dotfiles/.gitconfig .gitconfig
 RUN ln -s /dotfiles/.tmux.conf .tmux.conf
+RUN ln -s /dotfiles/.vimrc .vimrc
+RUN ln -s /dotfiles/.zsh_history .zsh_history
+RUN ln -s /dotfiles/.zshrc .zshrc
 
-RUN git clone --depth=1 https://github.com/savq/paq-nvim.git "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/pack/paqs/start/paq-nvim
+## nvim
+#RUN git clone --depth=1 https://github.com/savq/paq-nvim.git "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/pack/paqs/start/paq-nvim
+# RUN mkdir -p .config/nvim
+# RUN mkdir -p .config/nvim/undodir
+
+## vim
+vim +q
+
+## zsh
+RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
