@@ -21,7 +21,6 @@ RUN apt-get install -y \
 	tmux \ 
 	vim \
 	zsh
-COPY files/ .
 
 RUN bash install-neovim.sh
 
