@@ -9,10 +9,10 @@ try:
     http_proxy = os.environ["HTTP_PROXY"]
     https_proxy = os.environ["HTTPS_PROXY"]
     no_proxy = os.environ["NO_PROXY"]
+    build_arg = "HTTP_PROXY={http_proxy} --build-arg HTTPS_PROXY={https_proxy} --build-arg NO_PROXY={no_proxy}"
+
 except:
-    http_proxy = ""
-    https_proxy = ""
-    no_proxy = ""
+    build_arg = "foo=bar"
 
 home = str(Path.home())
 
@@ -20,12 +20,8 @@ build_result = subprocess.run(
     [
         "docker",
         "build",
-        "-e",
-        f"HTTP_PROXY={http_proxy}",
-        "-e",
-        f"HTTPS_PROXY={https_proxy}",
-        "-e",
-        f"NO_PROXY={no_proxy}",
+        "--build-arg",
+        build_arg,
         "-t",
         f"{IMAGE_NAME}:{IMAGE_TAG}",
         ".",
