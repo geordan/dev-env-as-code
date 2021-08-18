@@ -5,23 +5,34 @@ from pathlib import Path
 import subprocess
 import os
 
-try:
-    http_proxy = os.environ["HTTP_PROXY"]
-    https_proxy = os.environ["HTTPS_PROXY"]
-    no_proxy = os.environ["NO_PROXY"]
-    build_arg = "HTTP_PROXY={http_proxy} --build-arg HTTPS_PROXY={https_proxy} --build-arg NO_PROXY={no_proxy}"
-
-except:
-    build_arg = "foo=bar"
 
 home = str(Path.home())
+
+# create build args and env vars from config.py
+with open("config.py", "r") as config_file:
+    build_arg_str = ""
+    for line in config_file:
+        if line.startswith("#"):
+            continue
+        build_arg_str += line.strip()
+        build_arg_str += " --build-arg "
+
+# remove last ' --build-arg'... hacky
+build_arg_str = "".join(build_arg_str.split()[:-1])
+
+env_arg_str = build_arg_str.replace("--build-arg", "--env")
+env_arg_str = env_arg_str.replace("'", "")
+
+# print(build_arg_str)
+# print(env_arg_str)
+# quit()
 
 build_result = subprocess.run(
     [
         "docker",
         "build",
         "--build-arg",
-        build_arg,
+        build_arg_str,
         "-t",
         f"{IMAGE_NAME}:{IMAGE_TAG}",
         ".",
@@ -32,6 +43,8 @@ run_result = subprocess.run(
     [
         "docker",
         "run",
+        "--env",
+        env_arg_str,
         "-v",
         f"{home}/code/dotfiles:/dotfiles",
         "-v",
