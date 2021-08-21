@@ -32,6 +32,8 @@ RUN pip3 install ${PIP_OPTS} \
 	awscli==${AWSCLI_VERSION} \ 
 	git-remote-codecommit 
 
+RUN yes | unminimize
+
 RUN mkdir /dotfiles
 
 WORKDIR /root
