@@ -27,12 +27,16 @@ RUN apt-get install -y --fix-missing \
 	vim \
 	zsh
 
+RUN yes | unminimize
+
 # pip installs
 RUN pip3 install ${PIP_OPTS} \
 	awscli==${AWSCLI_VERSION} \ 
 	git-remote-codecommit 
 
-RUN yes | unminimize
+ADD files . 
+
+RUN ./install-todo-txt-cli.sh
 
 RUN mkdir /dotfiles
 
@@ -49,6 +53,9 @@ RUN chsh -s /usr/bin/zsh
 ## terraform - tfenv, 
 RUN git clone https://github.com/tfutils/tfenv.git .tfenv
 RUN ./.tfenv/bin/tfenv install 0.12.31
+RUN ./.tfenv/bin/tfenv install 0.13.7
+RUN ./.tfenv/bin/tfenv install  0.14.11
+RUN ./.tfenv/bin/tfenv use 0.12.31
 
 ## vim
 RUN vim +q
@@ -56,8 +63,9 @@ RUN vim +q
 ## zsh
 RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
+RUN ln -s -f /dotfiles/.todo.cfg .todo.cfg
+RUN ln -s -f /dotfiles/.zshrc .zshrc
 RUN ln -s /dotfiles/.gitconfig .gitconfig
 RUN ln -s /dotfiles/.tmux.conf .tmux.conf
 RUN ln -s /dotfiles/.vimrc .vimrc
 RUN ln -s /dotfiles/.zsh_history .zsh_history
-RUN ln -s -f /dotfiles/.zshrc .zshrc
