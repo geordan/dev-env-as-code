@@ -1,4 +1,4 @@
-FROM ubuntu:impish-20210722
+FROM ubuntu:20.04
 
 
 ENV \
@@ -11,29 +11,31 @@ NO_PROXY=${NO_PROXY}
 
 WORKDIR /tmp
 
+RUN yes | unminimize
 
 RUN apt-get update -y
 RUN apt-get upgrade -y
 
 RUN apt-get install -y --fix-missing \
-	curl \
-	dos2unix \
-	git \
-	man-db \
-	manpages \
-	python3 \
-	python3-pip \
-	tmux \
-	unzip \
-	vim \
-	zsh
+    curl \
+    dos2unix \
+    git \
+    lsb-release \
+    man-db \
+    manpages \
+    python3 \
+    python3-pip \
+    software-properties-common \
+    tmux \
+    unzip \
+    vim \
+    zsh
 
 # Add the HashiCorp GPG key and repository
 RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
 RUN apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+RUN apt-get update -y
 RUN apt-get install -y terraform-ls
-
-RUN yes | unminimize
 
 # pip installs
 RUN pip3 install ${PIP_OPTS} \
