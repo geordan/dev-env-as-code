@@ -11,6 +11,7 @@ NO_PROXY=${NO_PROXY}
 
 WORKDIR /tmp
 
+
 RUN apt-get update -y
 RUN apt-get upgrade -y
 
@@ -18,14 +19,19 @@ RUN apt-get install -y --fix-missing \
 	curl \
 	dos2unix \
 	git \
-	man-db \ 
+	man-db \
 	manpages \
-	python3-pip \
 	python3 \
-	tmux \ 
-	unzip \ 
+	python3-pip \
+	tmux \
+	unzip \
 	vim \
 	zsh
+
+# Add the HashiCorp GPG key and repository
+RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
+RUN apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+RUN apt-get install -y terraform-ls
 
 RUN yes | unminimize
 
