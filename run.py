@@ -43,8 +43,6 @@ run_result = subprocess.run(
     [
         "docker",
         "run",
-        "--env-file",
-        "config.py",
         "-v",
         f"{home}/code/dotfiles:/dotfiles",
         "-v",

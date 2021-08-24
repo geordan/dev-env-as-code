@@ -1,13 +1,9 @@
 FROM ubuntu:20.04
 
 
-ENV \
-AWSCLI_VERSION=1.18.32 \
-DEBIAN_FRONTEND=noninteractive \
-PIP_OPTS="--force-reinstall --no-cache-dir" \ 
-HTTP_PROXY=${HTTP_PROXY} \
-HTTPS_PROXY=${HTTPS_PROXY} \
-NO_PROXY=${NO_PROXY} 
+ENV AWSCLI_VERSION=1.18.32
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PIP_OPTS="--force-reinstall --no-cache-dir"
 
 WORKDIR /tmp
 
@@ -44,7 +40,7 @@ RUN pip3 install ${PIP_OPTS} \
 
 ADD files . 
 
-RUN ./install-todo-txt-cli.sh
+RUN bash install-todo-txt-cli.sh
 
 RUN mkdir /dotfiles
 
@@ -76,4 +72,5 @@ RUN ln -s -f /dotfiles/.zshrc .zshrc
 RUN ln -s /dotfiles/.gitconfig .gitconfig
 RUN ln -s /dotfiles/.tmux.conf .tmux.conf
 RUN ln -s /dotfiles/.vimrc .vimrc
+RUN ln -s /dotfiles/.vim .vim
 RUN ln -s /dotfiles/.zsh_history .zsh_history
