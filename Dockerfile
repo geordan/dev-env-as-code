@@ -19,6 +19,7 @@ RUN apt-get install -y --fix-missing \
     lsb-release \
     man-db \
     manpages \
+    openjdk-8-jre \
     python3 \
     python3-pip \
     software-properties-common \
