@@ -68,3 +68,5 @@ RUN ln -s /dotfiles/.todo.cfg .todo.cfg
 RUN ln -s /dotfiles/.vim .vim
 RUN ln -s /dotfiles/.vimrc .vimrc
 RUN ln -s /dotfiles/.zsh_history .zsh_history
+RUN ln -s /dotfiles/.zprofile .zprofile
+
