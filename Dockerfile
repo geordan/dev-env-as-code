@@ -1,18 +1,16 @@
 FROM ubuntu:20.04
 
-
 ENV AWSCLI_VERSION=1.18.32
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PIP_OPTS="--force-reinstall --no-cache-dir"
 
 WORKDIR /tmp
 
-RUN yes | unminimize
-
 RUN apt-get update -y
 RUN apt-get upgrade -y
+RUN apt-get clean
 
-RUN apt-get install -y --fix-missing \
+RUN apt-get install -y \
     curl \
     dos2unix \
     git \
@@ -26,10 +24,10 @@ RUN apt-get install -y --fix-missing \
     unzip \
     vim
 
+
 # Add the HashiCorp GPG key and repository
 RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
 RUN apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-RUN apt-get update -y
 RUN apt-get install -y terraform-ls
 
 ADD files . 
@@ -52,10 +50,10 @@ RUN ./.tfenv/bin/tfenv use 0.12.31
 ## vim
 RUN vim +q
 
-## zsh
-RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
-RUN ln -s /dotfiles/.bashrc .bashrc
+RUN ln -s -f /dotfiles/.bash_profile .bash_profile
+RUN ln -s -f /dotfiles/.bashrc .bashrc
 RUN ln -s /dotfiles/.gitconfig .gitconfig
 RUN ln -s /dotfiles/.vim .vim
 RUN ln -s /dotfiles/.vimrc .vimrc
+
+RUN yes | unminimize

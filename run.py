@@ -49,6 +49,6 @@ run_result = subprocess.run(
         f"{home}/code/:/root/code",
         "-it",
         f"{IMAGE_NAME}:{IMAGE_TAG}",
-        "tmux",
+        "bash",
     ]
 )
