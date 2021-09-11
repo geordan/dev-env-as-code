@@ -52,6 +52,7 @@ RUN vim +q
 
 RUN ln -s -f /dotfiles/.bash_profile .bash_profile
 RUN ln -s -f /dotfiles/.bashrc .bashrc
+RUN ln -s -f /dotfiles/.inputrc .inputrc
 RUN ln -s /dotfiles/.gitconfig .gitconfig
 RUN ln -s /dotfiles/.vim .vim
 RUN ln -s /dotfiles/.vimrc .vimrc
